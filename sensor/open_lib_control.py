@@ -1,6 +1,6 @@
 import RPi.GPIO as GPIO
 import time
-import stepper_control as sm
+import stepper_controls as sm
 import random
 
 servo_pin = 22
@@ -45,10 +45,10 @@ try:
 			time.sleep(3)
 			set_angle(53)
 			print("The door is closed")
-			pred_item = random.randint(5, 8)
+			pred_item = random.randint(0, 6)
 			time.sleep(2)
-			sm.control_motors_by_input(int(pred_item))
-			print(f"This is a {class_names[pred_item-2]}")
+			print(f"This is a {class_names[pred_item]}")
+			sm.motor_control(int(pred_item))
 			print("---------------------------------------------------------------------")
 			
 		else:
@@ -57,5 +57,6 @@ try:
 			
 					
 except KeyboardInterrupt:
+	sm.reset_motors_position()
 	pwm.stop()
 	GPIO.cleanup()
