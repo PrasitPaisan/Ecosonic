@@ -1,9 +1,14 @@
 import RPi.GPIO as GPIO
 import time
+import stepper_control as sm
+import random
 
 servo_pin = 22
 ir_pin = 17
 led_pin = 27
+
+class_names = ['battery', 'bottle', 'can', 'glass', 'paper', 'pingpong', 'plastic']
+
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(servo_pin, GPIO.OUT)
@@ -24,6 +29,7 @@ def set_angle(angle):
 
 
 try:
+	sm.setup_gpio()
 	print("System ON")
 	while True:
 		
@@ -38,6 +44,11 @@ try:
 			set_angle(95)
 			time.sleep(3)
 			set_angle(53)
+			print("The door is closed")
+			pred_item = random.randint(5, 8)
+			time.sleep(2)
+			sm.control_motors_by_input(int(pred_item))
+			print(f"This is a {class_names[pred_item-2]}")
 			print("---------------------------------------------------------------------")
 			
 		else:

@@ -3,10 +3,10 @@ import RPi.GPIO as GPIO
 import time
 
 # GPIO Pins
-MOTOR1_STEP = 18    
+MOTOR1_STEP = 5    
 MOTOR1_DIR = 23
-MOTOR2_STEP = 24
-MOTOR2_DIR = 25
+MOTOR2_STEP = 6
+MOTOR2_DIR = 24
 
 # Constants
 STEP_ANGLE = 1.8
@@ -14,8 +14,8 @@ STEPS_PER_90_DEG = int(90 / STEP_ANGLE)
 STEP_DELAY = 0.001
 
 # Defind initail positions for motors
-motor1_position = 1
-motor2_position = 1
+motor1_position = 0
+motor2_position = 0
 
 def setup_gpio():
     GPIO.setmode(GPIO.BCM)
@@ -46,7 +46,7 @@ def rotate_to_position(current_pos, target_pos, step_pin, dir_pin):
 
 def control_motors_by_input(value):
     global motor1_position, motor2_position
-
+    print(f"control motors for class {value}")
     if 1 <= value <= 4:
         if motor2_position != 0:
             motor2_position = rotate_to_position(
