@@ -1,15 +1,13 @@
 import RPi.GPIO as GPIO
 import time
 
-
-DIR_PIN1 = 6   
-STEP_PIN1 = 24  
-DIR_PIN2 = 5   
+DIR_PIN1 = 6
+STEP_PIN1 = 24
+DIR_PIN2 = 5
 STEP_PIN2 = 23
 
 CURRENT_MO1 = 0
-CURRENT_MO2 = 0
-
+CURRENT_MO2 = 4
 
 def setupGPIO():
     GPIO.setmode(GPIO.BCM)
@@ -20,43 +18,46 @@ def setupGPIO():
 
 def motor_rotate(step_pin, dir_pin, direction, step, step_delay):
     GPIO.output(dir_pin, direction)
-    for _ in range(step):
+    for _ in range(int(step)):
         GPIO.output(step_pin, GPIO.HIGH)
         time.sleep(step_delay)
         GPIO.output(step_pin, GPIO.LOW)
         time.sleep(step_delay)
 
-
-def rotate_to_position(target_position, current_position, step_pin, dir_pin):
+def rotate_to_position(target_position, current_position, step_pin, dir_pin, step_delay=0.0005):
     delta = target_position - current_position
-    step_count_per_90 = 6400/4
+    step_count_per_90 = 6400 / 4
     step = abs(delta) * step_count_per_90
-    step_delay = 0.00000001
-    direction = True
+    direction = delta < 0
 
     if delta == 0:
-        print("Don't rotate , alrady at target position")
+        print("Don't rotate, already at target position")
         return current_position
 
-    if delta > 0:
-        direction = False
-    else:
-        direction = True
-    
-    motor_rotate(step_pin, dir_pin, direction, step_delay)
+    motor_rotate(step_pin, dir_pin, direction, step, step_delay)
     return target_position
-
-
 
 def motor_control(target_pos):
     global CURRENT_MO1, CURRENT_MO2
-    if 0 <= target_pos <=3 :
+    if 0 <= target_pos <= 3:
         if CURRENT_MO2 != 0:
-            CURRENT_MO2 = rotate_to_position(0, CURRENT_MO2, )
- 
-    elif 4<= target_pos < 6 :
-        print("upper target")
+            CURRENT_MO2 = rotate_to_position(0, CURRENT_MO2, STEP_PIN2, DIR_PIN2)
+            print("Upper motor to position 0")
+        CURRENT_MO1 = rotate_to_position(target_pos, CURRENT_MO1, STEP_PIN1, DIR_PIN1)
+    elif 4 <= target_pos <= 5:
+        CURRENT_MO2 = rotate_to_position(target_pos - 4, CURRENT_MO2, STEP_PIN2, DIR_PIN2)
     else:
-        print("Hello world")
+        print("Invalid target position, must be between 0 and 6")
 
+if __name__ == "__main__":
+    setupGPIO()
+    try:
+        while True:
+            target_position = int(input("Enter target position (0-6): "))
+            motor_control(target_position)
 
+    except KeyboardInterrupt:
+        rotate_to_position(0, CURRENT_MO1, STEP_PIN1, DIR_PIN1)
+        rotate_to_position(0, CURRENT_MO2, STEP_PIN2, DIR_PIN2)
+        GPIO.cleanup()
+        print("Program is Terminated <3")
