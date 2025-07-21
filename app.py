@@ -64,10 +64,12 @@ if __name__ == "__main__":
                             pred = model.predict(img_array)
                             predicted_class_index = pred.argmax(axis=1)[0]
                             class_predicted.append(predicted_class_index)
-                            print(f"Predicted class for {f}: {class_names[predicted_class_index]}")
+                
+                
+                print(f"Rotating motor for class: {class_names[class_predicted[0]]} : {class_predicted[0]}")
+                motor_control(class_predicted[0])
 
                 set_angle(53)
-                motor_control(class_predicted[0])
                 # Detete the results after finish prediction
                 shutil.rmtree('./results')
                 shutil.rmtree("./images")
