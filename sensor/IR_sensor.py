@@ -6,4 +6,7 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setup(IR_PIN, GPIO.IN)
 
 def read_ir_sensor():
-    return GPIO.input(IR_PIN)
+    if GPIO.input(IR_PIN) == GPIO.LOW:
+        return 0
+    else:
+        return 1
