@@ -25,7 +25,7 @@ def motor_rotate(step_pin, dir_pin, direction, step, step_delay):
             GPIO.output(step_pin, GPIO.LOW)
             time.sleep(step_delay)
 
-def rotate_to_position(target_position, current_position, step_pin, dir_pin, step_delay=0.0000001):
+def rotate_to_position(target_position, current_position, step_pin, dir_pin, step_delay=0.00001):
     delta = target_position - current_position
     step_count_per_90 = 3200 / 4
     step = abs(delta) * step_count_per_90

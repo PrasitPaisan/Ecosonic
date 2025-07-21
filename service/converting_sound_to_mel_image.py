@@ -26,7 +26,7 @@ def sound_to_image(dataset_path, output_path, n_mels=128, n_fft=2048, hop_length
                         log_mel_spectrogram = librosa.power_to_db(mel_spectrogram, ref=np.max)
 
                         # สร้างภาพของ log mel spectrogram
-                        plt.figure(figsize=(224, 224), dpi=100)
+                        plt.figure(figsize=(2.24, 2.24))
                         librosa.display.specshow(log_mel_spectrogram, sr=sample_rate, hop_length=hop_length, cmap='coolwarm')
                         plt.axis('off')
                         plt.tight_layout(pad=0)

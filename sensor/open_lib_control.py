@@ -4,19 +4,18 @@ import stepper_controls as sm
 import random
 
 servo_pin = 22
-ir_pin = 17
 led_pin = 27
 
 class_names = ['battery', 'bottle', 'can', 'glass', 'paper', 'pingpong', 'plastic']
 
 
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(servo_pin, GPIO.OUT)
-GPIO.setup(ir_pin, GPIO.IN)
-GPIO.setup(led_pin, GPIO.OUT)
-
 pwm = GPIO.PWM(servo_pin, 50)
 pwm.start(0)
+
+def setup_GPIO_servo():
+	GPIO.setmode(GPIO.BCM)
+	GPIO.setup(servo_pin, GPIO.OUT)
+	GPIO.setup(led_pin, GPIO.OUT) 
 
 
 def set_angle(angle):
