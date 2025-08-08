@@ -16,6 +16,7 @@ from utils.preprocess_the_image import convert_to_array
 from sensor.servo_control import setup_GPIO_servo, set_angle,cleanup
 from sensor.stepper_controls import setup_gpio, motor_control, reset_motors_position
 from sensor.IR_sensor import read_ir_sensor
+from service.amplify import amplify_audio
 
 
 Image.MAX_IMAGE_PIXELS = None
@@ -43,14 +44,16 @@ if __name__ == "__main__":
 
                 write(input_path, sample_rate, recording) 
 
-                original_audio, sr = librosa.load(input_path, sr=sample_rate)
-                reduced_audio, _sr = reduce_audio_noise(input_path, sample_rate)
+                # original_audio, sr = librosa.load(input_path, sr=sample_rate)
+                # reduced_audio, _sr = reduce_audio_noise(input_path, sample_rate)
+                amplify_audio = amplify_audio(input_path)
+                
 
-                audio_segment = convert_to_2bytes(reduced_audio, _sr)
+                audio_segment = convert_to_2bytes(amplify_audio, sample_rate)
 
                 # plot_compare(original_audio=original_audio, reduced_audio=reduced_audio, sample_rate=sr)
 
-                cut_sound_per_action(audio_segment, "./results/sound", _sr)
+                cut_sound_per_action(audio_segment, "./results/sound", sample_rate)
             
                 sound_to_image(dataset_path="./results/sound", output_path="./images", n_mels=128, n_fft=2048, hop_length=512)
 
